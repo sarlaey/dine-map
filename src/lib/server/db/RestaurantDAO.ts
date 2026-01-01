@@ -8,6 +8,7 @@ interface RestaurantTable {
 	id: UUID;
 	name: string;
 	coordinates: string;
+	icon: Restaurant['icon'];
 }
 
 export class RestaurantDAO {
@@ -17,7 +18,8 @@ export class RestaurantDAO {
 			name: row.name,
 			coordinates: fromPgCoordinates(row.coordinates),
 			rating: reviews ? getRestaurantRating(reviews) : 0,
-			reviews
+			reviews,
+			icon: row.icon
 		};
 	}
 
@@ -53,5 +55,29 @@ export class RestaurantDAO {
 			restaurantList.push(await this.getRestaurantById(restaurantId));
 
 		return restaurantList.filter((r): r is Restaurant => r !== null);
+	}
+
+	static async updateRestaurant(
+		id: Restaurant['id'],
+		updates: Partial<Restaurant>
+	): Promise<Restaurant | null> {
+		const [updatedRow] = await sql<RestaurantTable[]>`
+			UPDATE restaurant
+			SET ${sql(updates, 'name', 'icon')}
+			WHERE id = ${id}
+			RETURNING *
+		`;
+
+		if (!updatedRow) {
+			return null;
+		}
+		return this.getRestaurantById(updatedRow.id);
+	}
+
+	static async deleteRestaurant(id: Restaurant['id']): Promise<void> {
+		await sql`
+			DELETE FROM restaurant
+			WHERE id = ${id}
+		`;
 	}
 }

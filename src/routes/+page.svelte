@@ -6,8 +6,7 @@
 		Viewbox
 	} from '$lib/types';
 	import { onMount } from 'svelte';
-	import { Map, Layer } from 'svelte-openlayers';
-	import Restaurant from './Restaurant.svelte';
+	import { Map, Layer, Feature } from 'svelte-openlayers';
 	import TooltipManager from './TooltipManager.svelte';
 	import Search from './Search.svelte';
 	import { dev } from '$app/environment';
@@ -16,6 +15,9 @@
 	import { invalidateAll } from '$app/navigation';
 	import { page } from '$app/state';
 	import { toLonLat } from 'ol/proj';
+	import ManageList from './ManageList.svelte';
+	import { emojiToSvgDataUrl, tailwindVarValue } from '$lib/utils';
+	import { createIconStyle } from 'svelte-openlayers/utils';
 
 	let restaurants = $derived(page.data.restaurants);
 	let mapCenter = $state<Coordinates>([0, 0]);
@@ -83,6 +85,10 @@
 	});
 </script>
 
+<svelte:head>
+	<title>Dine Map</title>
+</svelte:head>
+
 {#if viewBox}
 	<Search
 		bind:viewBox
@@ -123,9 +129,12 @@
 
 	<!-- Restaurants dots -->
 	<Layer.Vector>
-		{#each restaurants as restaurant}
-			<Restaurant {restaurant} />
-		{/each}
+		{#key restaurants}
+			{#each restaurants as restaurant}
+				{@const style = emojiToSvgDataUrl({ emoji: restaurant.icon, size: 40, name: restaurant.name })}
+				<Feature.Point coordinates={restaurant.coordinates} properties={restaurant} {style} />
+			{/each}
+		{/key}
 	</Layer.Vector>
 
 	<!-- Restaurants tooltips -->
@@ -134,3 +143,5 @@
 
 <!-- Restaurant details (CRUD) modal -->
 <Details />
+
+<ManageList />

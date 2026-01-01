@@ -33,7 +33,6 @@
 		"eslint-plugin-svelte": "^3.12.4",
 		"globals": "^16.4.0",
 		"husky": "^9.1.7",
-		"layerchart": "2.0.0-next.43",
 		"lint-staged": "^16.2.7",
 		"prettier": "^3.6.2",
 		"prettier-plugin-svelte": "^3.4.0",

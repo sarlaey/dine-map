@@ -1,7 +1,9 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import type { Coordinates, Review } from './types';
+import type { AvailableEmojis, Coordinates, Review } from './types';
 import { getDistance } from 'ol/sphere';
+import { Style as OlStyle, Text as OlText, Fill as OlFill } from 'ol/style';
+import { createIconStyle } from 'svelte-openlayers/utils';
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -14,7 +16,7 @@ export type WithoutChildren<T> = T extends { children?: any } ? Omit<T, 'childre
 export type WithoutChildrenOrChild<T> = WithoutChildren<WithoutChild<T>>;
 export type WithElementRef<T, U extends HTMLElement = HTMLElement> = T & { ref?: U | null };
 
-export function tailwindColorToHex(tailwindColor: string): string {
+export function tailwindVarValue(tailwindColor: string): string {
 	// Get the computed styles of the document body
 	const styles = getComputedStyle(document.body);
 
@@ -23,7 +25,7 @@ export function tailwindColorToHex(tailwindColor: string): string {
 	const colorValue = styles.getPropertyValue(cssVariableName).trim();
 
 	console.debug(`Converted Tailwind color '${tailwindColor}' to hex value: ${colorValue}`);
-	return colorValue || '#FFFFFF';
+	return colorValue;
 }
 
 export function getRestaurantRating(reviews: Review[]): number {
@@ -51,3 +53,41 @@ export const formatDate = (date: string | Date): string => {
 		day: 'numeric'
 	});
 };
+
+export function emojiToSvgDataUrl({
+	emoji,
+	name,
+	size = 40,
+	bgColor = tailwindVarValue('background')
+}: {
+	emoji: AvailableEmojis;
+	name?: string;
+	size?: number;
+	bgColor?: string;
+	fgColor?: string;
+	fontFamily?: string;
+}): OlStyle[] {
+	const icon = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+		<rect width="100%" height="100%" rx="${size / 2}" fill="${bgColor}" />
+		<text x="50%" y="50%" font-size="${Math.floor(size * 0.6)}" text-anchor="middle" dominant-baseline="central" font-family="Apple Color Emoji,Segoe UI Emoji,Noto Color Emoji,Segoe UI Symbol">${emoji}</text>
+	</svg>
+	`;
+	const style = createIconStyle({
+		src: `data:image/svg+xml;charset=utf-8,${encodeURIComponent(icon)}`,
+		scale: 1,
+		anchor: [0.5, 0.5],
+		anchorXUnits: 'fraction',
+		anchorYUnits: 'fraction'
+	});
+	const labelStyle = new OlStyle({
+		text: new OlText({
+			text: name ?? '',
+			font: `600 ${Math.floor(size * 0.3)}px ${tailwindVarValue('font-sans')}`,
+			fill: new OlFill({ color: tailwindVarValue('foreground') }),
+			offsetY: -Math.floor(size * 0.6),
+			overflow: true
+		})
+	});
+
+	return [style, labelStyle];
+}

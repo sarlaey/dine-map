@@ -107,7 +107,7 @@
 		class="fixed top-4 right-4 left-4 z-10 flex flex-col gap-4"
 		transition:fly={{ duration: 300, y: '-100%' }}
 	>
-		<InputGroup.Root class="bg-card">
+		<InputGroup.Root class="bg-card!">
 			<InputGroup.Input
 				placeholder="Search for restaurants"
 				bind:ref={searchInput}
