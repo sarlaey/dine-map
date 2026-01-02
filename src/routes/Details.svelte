@@ -139,19 +139,29 @@
 			</div>
 			<Rating rating={restaurant.rating} compact={true} />
 		</div>
+		<!-- Restaurant in list pills -->
 		<div class="flex flex-row items-center justify-between">
-			<div class="flex grow flex-row flex-nowrap gap-4 overflow-x-auto">
+			<div class="flex grow flex-row flex-nowrap gap-2 overflow-x-auto">
 				{#each restaurantLists as list}
-					<div class="rounded border-border bg-card px-2 py-0.5">
-						<span>{list.icon} {list.name}</span>
+					<div class="relative w-max rounded border-border bg-card px-2 py-0.5">
+						<div class="absolute inset-0 overflow-hidden rounded">
+							<span
+								class="absolute top-1/2 left-1/2 z-0 -translate-x-1/2 -translate-y-1/2 text-[120px] opacity-10 blur-xl"
+								>{list.icon}</span
+							>
+						</div>
+						<span class="font-medium text-nowrap whitespace-nowrap">{list.icon} {list.name}</span>
 					</div>
 				{/each}
 			</div>
-			<Button class="shrink-0" size="icon" onclick={() => (Globals.toggleList = restaurant.id)}>
+
+			<!-- manage place bookmarks button -->
+			<Button class="shrink-0" size="icon-sm" onclick={() => (Globals.toggleList = restaurant.id)}>
 				<Bookmark class="size-4" />
 			</Button>
 		</div>
-		<div class="flex flex-row"></div>
+
+		<!-- Main content (empty or reviews list) -->
 		{#if restaurant.reviews.length === 0}
 			<Empty.Root>
 				<Empty.Header>
@@ -197,6 +207,8 @@
 				<Plus class="size-4" />
 			</Button>
 		{/if}
+
+		<!-- Footer -->
 		<div class="mt-auto flex shrink-0 flex-row gap-2">
 			<Button variant="destructive" onclick={() => (deleteStates.confirmOpen = true)}>
 				<Trash2 class="size-4 shrink-0" />
@@ -206,6 +218,7 @@
 			</Button>
 		</div>
 	</div>
+	<!-- New review modal -->
 	{#if reviewOpen}
 		<div
 			class="fixed inset-0 z-40 bg-background/50 backdrop-blur-xs"
@@ -251,6 +264,7 @@
 	{/if}
 {/if}
 
+<!-- Delete POI confirm modal -->
 {#if deleteStates.confirmOpen && restaurant}
 	<div
 		class="fixed inset-0 z-40 bg-background/50 backdrop-blur-xs"

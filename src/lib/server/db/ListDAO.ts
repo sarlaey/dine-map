@@ -114,4 +114,11 @@ export class ListDAO {
 		}
 		return this.getListById(updatedRow.id);
 	}
+
+	static async deleteList(id: List['id']): Promise<void> {
+		await sql`
+			DELETE FROM list
+			WHERE id = ${id}
+		 `;
+	}
 }

@@ -173,8 +173,8 @@ export type NewRestaurant = z.infer<typeof NewRestaurantZ>;
 export type AvailableEmojis = (typeof availableEmojis)[number];
 export const ListZ = z.object({
 	id: UUIDZ,
-	name: z.string(),
-	description: z.string().optional(),
+	name: z.string().max(20),
+	description: z.string().max(200).optional(),
 	createdAt: z.date(),
 	restaurants: z.array(RestaurantZ),
 	icon: z.enum(availableEmojis)

@@ -1,12 +1,13 @@
 <script lang="ts">
 	import {
 		type Coordinates,
+		type List,
 		type NewRestaurant,
 		type Restaurant as RestaurantType,
 		type Viewbox
 	} from '$lib/types';
 	import { onMount } from 'svelte';
-	import { Map, Layer } from 'svelte-openlayers';
+	import { Map as MapComponent, Layer } from 'svelte-openlayers';
 	import TooltipManager from './TooltipManager.svelte';
 	import Search from './Search.svelte';
 	import { dev } from '$app/environment';
@@ -23,6 +24,15 @@
 	import { clusterStyle } from '$lib/utils';
 
 	let restaurants = $derived<RestaurantType[]>(page.data.restaurants);
+	let lists = $derived<List[]>(page.data.lists);
+	let restaurantIdsInLists = $derived.by(() => {
+		// This used to more efficiently filter restaurants on the map based on lists since it only updates when lists change
+		const map = new Map<List['id'], Set<RestaurantType['id']>>();
+		for (const list of lists) {
+			map.set(list.id, new Set(list.restaurants.map((r) => r.id)));
+		}
+		return map;
+	});
 	let mapCenter = $state<Coordinates>([0, 0]);
 	let map = $state<any>(null);
 	let viewBox = $state<Viewbox | null>(null);
@@ -87,17 +97,25 @@
 		}
 	});
 
-	let restaurantSource = $derived(
-		new VectorSource({
-			features: restaurants.map(
+	let restaurantSource = $derived.by(() => {
+		let filteredRestaurants = [];
+		if (Globals.mapFilterList.length > 0) {
+			filteredRestaurants = restaurants.filter((r) =>
+				Globals.mapFilterList.some((listId) => restaurantIdsInLists.get(listId)?.has(r.id))
+			);
+		} else {
+			filteredRestaurants = restaurants;
+		}
+		return new VectorSource({
+			features: filteredRestaurants.map(
 				(r) =>
 					new OlFeature({
 						geometry: new Point(fromLonLat(r.coordinates)),
 						restaurant: r
 					})
 			)
-		})
-	);
+		});
+	});
 
 	let clusterSource = $state(
 		new Cluster({
@@ -144,8 +162,8 @@
 	/>
 {/if}
 
-<Map.Root class="block h-96 w-full" bind:map>
-	<Map.View center={mapCenter} onMoveEnd={updateViewBox} maxZoom={22} zoom={14} />
+<MapComponent.Root class="block h-96 w-full" bind:map>
+	<MapComponent.View center={mapCenter} onMoveEnd={updateViewBox} maxZoom={22} zoom={14} />
 	<!-- Map tiles -->
 	<!-- ? The attribution text and styling are not default. I do not think that I break any rule listed by OpenStreetMap or Carto (see https://osmfoundation.org/wiki/Licence/Attribution_Guidelines#Attribution_text, https://osmfoundation.org/wiki/Licence/Attribution_Guidelines#Interactive_maps & https://github.com/CartoDB/basemap-styles?tab=readme-ov-file#1-web-raster-basemaps) but if you have any legal knowledge, please open a PR or discussion about it. -->
 	<Layer.Tile
@@ -160,7 +178,7 @@
 
 	<!-- Restaurants tooltips -->
 	<TooltipManager />
-</Map.Root>
+</MapComponent.Root>
 
 <!-- Restaurant details (CRUD) modal -->
 <Details />

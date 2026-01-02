@@ -47,9 +47,15 @@
 
 			<button
 				class="absolute right-2 bottom-14 z-20 size-10 rounded-full bg-secondary/50 p-2 backdrop-blur-xs transition-all"
-				onclick={() => (Globals.manageLists = !Globals.manageLists)}
+				onclick={() => {
+					if (Globals.mapFilterList.length > 0) {
+						Globals.mapFilterList = [];
+					} else {
+						Globals.manageLists = !Globals.manageLists;
+					}
+				}}
 			>
-				{#if Globals.manageLists}
+				{#if Globals.manageLists || Globals.mapFilterList.length > 0}
 					<div class="size-full" in:scale={{ duration: 200 }}>
 						<X class="size-full" />
 					</div>

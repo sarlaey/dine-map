@@ -44,3 +44,15 @@ export const PUT: RequestHandler = async ({ request }) => {
 	}
 	return json(updatedList);
 };
+
+export const DELETE: RequestHandler = async ({ request }) => {
+	const body = await request.json();
+	const schema = ListZ.pick({ id: true });
+	const parseResult = schema.safeParse(body);
+	if (!parseResult.success) {
+		return json({ error: 'Invalid request body', details: parseResult.error }, { status: 400 });
+	}
+	const { id } = parseResult.data;
+	await ListDAO.deleteList(id);
+	return json({ success: true });
+};
