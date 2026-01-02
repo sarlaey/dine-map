@@ -2,7 +2,13 @@ import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import type { AvailableEmojis, Coordinates, Review } from './types';
 import { getDistance } from 'ol/sphere';
-import { Style as OlStyle, Text as OlText, Fill as OlFill } from 'ol/style';
+import {
+	Style as OlStyle,
+	Circle as OlCircle,
+	Text as OlText,
+	Fill as OlFill,
+	Stroke as OlStroke
+} from 'ol/style';
 import { createIconStyle } from 'svelte-openlayers/utils';
 
 export function cn(...inputs: ClassValue[]) {
@@ -16,7 +22,11 @@ export type WithoutChildren<T> = T extends { children?: any } ? Omit<T, 'childre
 export type WithoutChildrenOrChild<T> = WithoutChildren<WithoutChild<T>>;
 export type WithElementRef<T, U extends HTMLElement = HTMLElement> = T & { ref?: U | null };
 
+const stylesCache = new Map<string, string>();
 export function tailwindVarValue(tailwindColor: string): string {
+	if (stylesCache.has(tailwindColor)) {
+		return stylesCache.get(tailwindColor)!;
+	}
 	// Get the computed styles of the document body
 	const styles = getComputedStyle(document.body);
 
@@ -25,6 +35,7 @@ export function tailwindVarValue(tailwindColor: string): string {
 	const colorValue = styles.getPropertyValue(cssVariableName).trim();
 
 	console.debug(`Converted Tailwind color '${tailwindColor}' to hex value: ${colorValue}`);
+	stylesCache.set(tailwindColor, colorValue);
 	return colorValue;
 }
 
@@ -67,6 +78,7 @@ export function emojiToSvgDataUrl({
 	fgColor?: string;
 	fontFamily?: string;
 }): OlStyle[] {
+	const MAX_NAME_LENGTH = 15;
 	const icon = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
 		<rect width="100%" height="100%" rx="${size / 2}" fill="${bgColor}" />
 		<text x="50%" y="50%" font-size="${Math.floor(size * 0.6)}" text-anchor="middle" dominant-baseline="central" font-family="Apple Color Emoji,Segoe UI Emoji,Noto Color Emoji,Segoe UI Symbol">${emoji}</text>
@@ -81,7 +93,10 @@ export function emojiToSvgDataUrl({
 	});
 	const labelStyle = new OlStyle({
 		text: new OlText({
-			text: name ?? '',
+			text:
+				(name ?? '').length > MAX_NAME_LENGTH
+					? (name ?? '').slice(0, MAX_NAME_LENGTH - 3) + '...'
+					: (name ?? ''),
 			font: `600 ${Math.floor(size * 0.3)}px ${tailwindVarValue('font-sans')}`,
 			fill: new OlFill({ color: tailwindVarValue('foreground') }),
 			offsetY: -Math.floor(size * 0.6),
@@ -91,3 +106,30 @@ export function emojiToSvgDataUrl({
 
 	return [style, labelStyle];
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const clusterStyle = (feature: any) => {
+	const size = feature.get('features').length;
+
+	if (size === 1) {
+		const restaurant = feature.get('features')[0].get('restaurant');
+		return emojiToSvgDataUrl({
+			emoji: restaurant.icon,
+			size: 40,
+			name: restaurant.name
+		});
+	}
+
+	return new OlStyle({
+		image: new OlCircle({
+			radius: 14,
+			fill: new OlFill({ color: tailwindVarValue('background') }),
+			stroke: new OlStroke({ color: tailwindVarValue('foreground'), width: 2 })
+		}),
+		text: new OlText({
+			text: String(size),
+			fill: new OlFill({ color: tailwindVarValue('foreground') }),
+			font: `bold 12px ${tailwindVarValue('font-sans')}`
+		})
+	});
+};

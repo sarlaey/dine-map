@@ -1,12 +1,12 @@
 <script lang="ts">
-	import type {
-		Coordinates,
-		NewRestaurant,
-		Restaurant as RestaurantType,
-		Viewbox
+	import {
+		type Coordinates,
+		type NewRestaurant,
+		type Restaurant as RestaurantType,
+		type Viewbox
 	} from '$lib/types';
 	import { onMount } from 'svelte';
-	import { Map, Layer, Feature } from 'svelte-openlayers';
+	import { Map, Layer } from 'svelte-openlayers';
 	import TooltipManager from './TooltipManager.svelte';
 	import Search from './Search.svelte';
 	import { dev } from '$app/environment';
@@ -14,12 +14,15 @@
 	import Details from './Details.svelte';
 	import { invalidateAll } from '$app/navigation';
 	import { page } from '$app/state';
-	import { toLonLat } from 'ol/proj';
+	import { fromLonLat, toLonLat } from 'ol/proj';
 	import ManageList from './ManageList.svelte';
-	import { emojiToSvgDataUrl, tailwindVarValue } from '$lib/utils';
-	import { createIconStyle } from 'svelte-openlayers/utils';
+	import VectorSource from 'ol/source/Vector';
+	import Cluster from 'ol/source/Cluster';
+	import OlFeature from 'ol/Feature';
+	import Point from 'ol/geom/Point';
+	import { clusterStyle } from '$lib/utils';
 
-	let restaurants = $derived(page.data.restaurants);
+	let restaurants = $derived<RestaurantType[]>(page.data.restaurants);
 	let mapCenter = $state<Coordinates>([0, 0]);
 	let map = $state<any>(null);
 	let viewBox = $state<Viewbox | null>(null);
@@ -83,6 +86,31 @@
 			});
 		}
 	});
+
+	let restaurantSource = $derived(
+		new VectorSource({
+			features: restaurants.map(
+				(r) =>
+					new OlFeature({
+						geometry: new Point(fromLonLat(r.coordinates)),
+						restaurant: r
+					})
+			)
+		})
+	);
+
+	let clusterSource = $state(
+		new Cluster({
+			distance: 50, // 50 px since each POI icon is 40x40 and there is the text on top of it, so to be safe, we say 50px
+			// svelte-ignore state_referenced_locally
+			source: restaurantSource
+		})
+	);
+
+	// Apply it in an effect because in a derived, it does not reflect the changes on the rendered source
+	$effect(() => {
+		if (clusterSource && restaurantSource) clusterSource.setSource(restaurantSource);
+	});
 </script>
 
 <svelte:head>
@@ -128,18 +156,7 @@
 	/>
 
 	<!-- Restaurants dots -->
-	<Layer.Vector>
-		{#key restaurants}
-			{#each restaurants as restaurant}
-				{@const style = emojiToSvgDataUrl({
-					emoji: restaurant.icon,
-					size: 40,
-					name: restaurant.name
-				})}
-				<Feature.Point coordinates={restaurant.coordinates} properties={restaurant} {style} />
-			{/each}
-		{/key}
-	</Layer.Vector>
+	<Layer.Vector bind:source={clusterSource} style={clusterStyle}></Layer.Vector>
 
 	<!-- Restaurants tooltips -->
 	<TooltipManager />

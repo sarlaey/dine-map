@@ -50,3 +50,18 @@ You can now just start the webserver and database and it's done!
 ```bash
 docker compose up db web -d
 ```
+
+# Ressources
+
+## Maps
+
+- [https://nominatim.org/release-docs/latest/api/Search/](https://nominatim.org/release-docs/latest/api/Search/)
+- [https://svelte-openlayers.com/](https://svelte-openlayers.com/)
+- [https://github.com/openmaptiles/openmaptiles-tools?tab=readme-ov-file#multi-streamed-osm-data-downloader](https://github.com/openmaptiles/openmaptiles-tools?tab=readme-ov-file#multi-streamed-osm-data-downloader)
+- [https://github.com/systemed/tilemaker?tab=readme-ov-file#getting-started](https://github.com/systemed/tilemaker?tab=readme-ov-file#getting-started)
+- [https://download.geofabrik.de/](https://download.geofabrik.de/)
+- [https://github.com/maptiler/tileserver-gl](https://github.com/maptiler/tileserver-gl)
+
+## Runtime
+
+- [https://bun.com/docs/runtime/sql](https://bun.com/docs/runtime/sql)
