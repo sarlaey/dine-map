@@ -2,15 +2,15 @@
 	import { page } from '$app/state';
 	import { Button } from '$lib/components/ui/button';
 	import Globals from '$lib/globals.svelte';
-	import type { List, NewReview, Restaurant } from '$lib/types';
+	import type { List, NewReview, Restaurant, Review } from '$lib/types';
 	import { fade, scale, slide } from 'svelte/transition';
 	import * as Field from '$lib/components/ui/field';
 	import { Textarea } from '$lib/components/ui/textarea';
 	import Rating from './Rating.svelte';
 	import { invalidateAll } from '$app/navigation';
-	import { formatDate } from '$lib/utils';
+	import { cn, formatDate } from '$lib/utils';
 	import * as Empty from '$lib/components/ui/empty';
-	import { Bookmark, Plus, Star, Trash2, UtensilsCrossed } from '@lucide/svelte';
+	import { Bookmark, Pen, Plus, Save, Star, Trash2, UtensilsCrossed, X } from '@lucide/svelte';
 	import EmojiPicker from '$lib/components/emojiPicker/emojiPicker.svelte';
 
 	let restaurant = $derived(
@@ -29,6 +29,7 @@
 		// svelte-ignore state_referenced_locally
 		restaurantId: ''
 	});
+	let editReview = $state({ id: '', open: false, fields: { rating: 5, comment: '' } });
 	let isCreatingReview = $state(false);
 	let deleteStates = $state({ confirmOpen: false, processing: false });
 
@@ -60,9 +61,17 @@
 
 	$effect(() => {
 		// Rest fields on close
-		if (!reviewOpen) {
+		if (!restaurant) {
 			newReview.rating = 5;
 			newReview.comment = '';
+			editReview = {
+				id: '',
+				open: false,
+				fields: {
+					rating: 5,
+					comment: ''
+				}
+			};
 		}
 	});
 
@@ -104,6 +113,75 @@
 		Globals.restaurantDetailsId = null;
 		await invalidateAll();
 	}
+
+	const toggleEdit = (reviewId: Review['id']) => {
+		const review = restaurant?.reviews.find((r) => r.id === reviewId);
+		if (!review) return;
+		if (editReview.open && editReview.id === review.id) {
+			editReview = {
+				id: '',
+				open: false,
+				fields: {
+					rating: 5,
+					comment: ''
+				}
+			};
+		} else {
+			editReview = {
+				id: review.id,
+				open: true,
+				fields: {
+					rating: review.rating,
+					comment: review.comment
+				}
+			};
+		}
+	};
+
+	async function submitEdit() {
+		const updatedReview = {
+			...editReview.fields,
+			id: editReview.id
+		};
+		const res = await fetch('/api/review', {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(updatedReview)
+		});
+		const data = await res.json();
+		if (!res.ok) {
+			console.error('Failed to update review:', data);
+			return;
+		}
+		await invalidateAll();
+		toggleEdit(editReview.id);
+	}
+
+	async function deleteReview(reviewId: Review['id']) {
+		const res = await fetch('/api/review', {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ id: reviewId })
+		});
+		if (!res.ok) {
+			const data = await res.json();
+			console.error('Failed to delete review:', data);
+			return;
+		}
+		await invalidateAll();
+		editReview = {
+			id: '',
+			open: false,
+			fields: {
+				rating: 5,
+				comment: ''
+			}
+		};
+	}
 </script>
 
 <svelte:window
@@ -113,6 +191,91 @@
 		}
 	}}
 />
+
+{#snippet reviewCard(review: Review)}
+	{@const isEditingReview = editReview.open && editReview.id === review.id}
+	<div class="relative flex flex-col gap-2 rounded border border-border p-3">
+		{#if isEditingReview}
+			<div class="flex flex-col gap-2" transition:slide={{ duration: 200, axis: 'y' }}>
+				<Field.Field>
+					<Field.Label for="editReviewRating">Rating</Field.Label>
+					<Rating
+						rating={editReview.fields.rating}
+						id="editReviewRating"
+						onStarClick={(starIndex) => (editReview.fields.rating = starIndex + 1)}
+					/>
+				</Field.Field>
+				<Field.Field>
+					<Field.Label for="editReviewComment">Comment</Field.Label>
+					<Textarea
+						bind:value={editReview.fields.comment}
+						id="editReviewComment"
+						placeholder="Your comment on the place"
+						class="resize-none"
+					/>
+				</Field.Field>
+			</div>
+		{:else}
+			<div class="flex flex-col gap-2" transition:slide={{ duration: 200, axis: 'y' }}>
+				<div class="flex flex-row items-center gap-4">
+					<Rating rating={review.rating} compact={true} />
+					<span class="text-sm text-muted-foreground">-</span>
+					<span class="text-sm text-muted-foreground">{formatDate(review.date)}</span>
+				</div>
+				{#if review.comment}
+					<p>{review.comment}</p>
+				{/if}
+			</div>
+		{/if}
+
+		<div
+			class={cn(
+				'absolute top-0 right-0 flex flex-col items-end transition-all',
+				isEditingReview && 'pt-2 pr-2'
+			)}
+		>
+			<div class="flex flex-row">
+				{#if isEditingReview}
+					<div class="mr-2" transition:slide={{ duration: 200, axis: 'x' }}>
+						<Button
+							size="icon-sm"
+							variant="destructive"
+							class="rounded-full"
+							onclick={() => deleteReview(review.id)}
+						>
+							<Trash2 class="size-4" />
+						</Button>
+					</div>
+				{/if}
+				<Button
+					size="icon-sm"
+					class={isEditingReview ? 'rounded-full' : 'rounded'}
+					variant={isEditingReview ? 'outline' : 'default'}
+					onclick={() => {
+						toggleEdit(review.id);
+					}}
+				>
+					{#if isEditingReview}
+						<span class="size-4" in:scale={{ duration: 200 }}>
+							<X class="size-4" />
+						</span>
+					{:else}
+						<span class="size-4" in:scale={{ duration: 200 }}>
+							<Pen class="size-full" />
+						</span>
+					{/if}
+				</Button>
+			</div>
+			{#if isEditingReview}
+				<div class="mt-2 w-fit" transition:slide={{ duration: 200, axis: 'y' }}>
+					<Button size="icon-sm" variant="default" class="rounded-full" onclick={submitEdit}>
+						<Save class="size-4" />
+					</Button>
+				</div>
+			{/if}
+		</div>
+	</div>
+{/snippet}
 
 {#if restaurant}
 	<div
@@ -142,7 +305,7 @@
 		<!-- Restaurant in list pills -->
 		<div class="flex flex-row items-center justify-between">
 			<div class="flex grow flex-row flex-nowrap gap-2 overflow-x-auto">
-				{#each restaurantLists as list}
+				{#each restaurantLists as list (list.id)}
 					<div class="relative w-max rounded border-border bg-card px-2 py-0.5">
 						<div class="absolute inset-0 overflow-hidden rounded">
 							<span
@@ -192,14 +355,8 @@
 			</Empty.Root>
 		{:else}
 			<div class="flex grow flex-col gap-2 overflow-y-auto">
-				{#each restaurant.reviews as review}
-					<div class="relative space-y-2 rounded border border-border p-3">
-						<div class="flex flex-row items-center justify-between gap-4">
-							<Rating rating={review.rating} compact={true} />
-							<span class="text-sm text-muted-foreground">{formatDate(review.date)}</span>
-						</div>
-						<p>{review.comment}</p>
-					</div>
+				{#each restaurant.reviews as review (review.id)}
+					{@render reviewCard(review)}
 				{/each}
 			</div>
 			<Button class="mt-auto flex shrink-0 flex-row gap-2" onclick={() => (reviewOpen = true)}>

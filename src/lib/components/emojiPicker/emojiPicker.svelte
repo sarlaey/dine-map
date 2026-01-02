@@ -43,7 +43,7 @@
 			transition:fade={{ duration: 300 }}
 			style="grid-template-columns: repeat(auto-fit, minmax(2.25rem, 1fr));"
 		>
-			{#each availableEmojis as emoji}
+			{#each availableEmojis as emoji (emoji)}
 				<Button
 					onclick={() => {
 						onSelect?.(emoji);

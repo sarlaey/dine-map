@@ -71,7 +71,7 @@
 			<div
 				class="w-[80dvw] max-w-125 space-y-4 overflow-y-auto rounded border border-border bg-card p-4"
 			>
-				{#each restaurants as { icon, name, id }}
+				{#each restaurants as { icon, name, id } (id)}
 					<div class="flex flex-row items-center justify-between gap-2 rtl:flex-row-reverse">
 						<p class="line-clamp-1 font-mono text-lg font-medium">{icon} {name}</p>
 						<Button size="icon-sm" onclick={() => (Globals.restaurantDetailsId = id)}>
@@ -110,7 +110,7 @@
 					</Empty.Root>
 				{:else}
 					<div class="relative flex max-h-[50dvh] flex-col gap-4 overflow-y-auto pt-2">
-						{#each restaurants[0].reviews.slice(0, maxReviewsToShow) as review}
+						{#each restaurants[0].reviews.slice(0, maxReviewsToShow) as review (review.id)}
 							<div class="relative rounded-md border border-border p-2">
 								<span
 									class="absolute top-0 right-3 -translate-y-1/2 bg-card text-xs text-muted-foreground"

@@ -43,7 +43,7 @@ export class ReviewDAO {
 	}
 
 	static async createReview(review: NewReview): Promise<Review> {
-		const [r] = await sql`
+		const [r] = await sql<ReviewTable[]>`
       INSERT INTO review (restaurant_id, rating, comment)
       VALUES (${review.restaurantId}, ${review.rating}, ${review.comment})
       RETURNING *
@@ -58,15 +58,17 @@ export class ReviewDAO {
     `;
 	}
 
-	static async updateReview(id: Review['id'], review: Partial<NewReview>): Promise<Review | null> {
-		const fields = Object.keys(review) as (keyof NewReview)[];
-		if (fields.length === 0) {
-			return this.getReviewById(id);
-		}
-		const [r] = await sql<ReviewTable[]>`UPDATE users SET ${sql(review)} WHERE id = ${id}`;
-		if (!r) {
+	static async updateReview(id: Review['id'], updates: Partial<NewReview>): Promise<Review | null> {
+		const [updatedRow] = await sql<ReviewTable[]>`
+			UPDATE review
+			SET ${sql(updates, 'comment', 'rating')}
+			WHERE id = ${id}
+			RETURNING *
+		`;
+
+		if (!updatedRow) {
 			return null;
 		}
-		return this.convertToReview(r);
+		return this.getReviewById(updatedRow.id);
 	}
 }
