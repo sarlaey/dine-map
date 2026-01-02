@@ -1,6 +1,6 @@
 import { RestaurantDAO } from '$lib/server/db/RestaurantDAO';
 import type { PageServerLoad } from './$types';
-import { TILE_CUSTOM } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 import { ListDAO } from '$lib/server/db/ListDAO';
 
 export const load = (async () => {
@@ -9,6 +9,6 @@ export const load = (async () => {
 	return {
 		restaurants,
 		lists,
-		TILE_CUSTOM: TILE_CUSTOM === 'true'
+		TILE_CUSTOM: env.TILE_CUSTOM === 'true'
 	};
 }) satisfies PageServerLoad;

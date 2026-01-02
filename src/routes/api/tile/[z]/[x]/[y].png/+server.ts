@@ -1,10 +1,11 @@
 import type { RequestHandler } from './$types';
-import { TILE_CUSTOM, TILES_HOST, TILES_PORT } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 
 const CACHE_DURATION = 60 * 60 * 24 * 30; // 30 days
 
 export const GET: RequestHandler = async ({ fetch, params }) => {
 	const { z, x, y } = params;
+	const { TILES_HOST, TILES_PORT, TILE_CUSTOM } = env;
 	const URL =
 		TILE_CUSTOM == 'true'
 			? `http://${TILES_HOST}:${TILES_PORT}/styles/dark-matter/512/{z}/{x}/{y}.png`
