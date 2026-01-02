@@ -6,13 +6,13 @@ import { ListZ, NewListZ } from '$lib/types';
 export const GET: RequestHandler = async ({ url }) => {
 	const params = url.searchParams;
 	const id = params.get('id');
-	if(id) {
+	if (id) {
 		const list = await ListDAO.getListById(id);
-		if(!list) {
+		if (!list) {
 			return json({ error: 'List not found' }, { status: 404 });
 		}
 		return json(list);
-	}else {
+	} else {
 		const allLists = await ListDAO.getAllLists();
 		return json(allLists);
 	}

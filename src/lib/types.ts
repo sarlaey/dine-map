@@ -180,5 +180,7 @@ export const ListZ = z.object({
 	icon: z.enum(availableEmojis)
 });
 export type List = z.infer<typeof ListZ>;
-export const NewListZ = ListZ.omit({ id: true, createdAt: true, restaurants: true });
+export const NewListZ = ListZ.omit({ id: true, createdAt: true, restaurants: true }).extend({
+	icon: ListZ.shape.icon.optional()
+});
 export type NewList = z.infer<typeof NewListZ>;

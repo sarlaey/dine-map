@@ -52,7 +52,13 @@
 	{/snippet}
 
 	{#snippet selectSnippet(feature)}
-		{@const { rating: ratingScore, name, reviews, id, icon } = feature.getProperties() as Restaurant}
+		{@const {
+			rating: ratingScore,
+			name,
+			reviews,
+			id,
+			icon
+		} = feature.getProperties() as Restaurant}
 		<div
 			class="w-[80dvw] max-w-125 space-y-4 overflow-hidden rounded border border-border bg-card p-4"
 		>

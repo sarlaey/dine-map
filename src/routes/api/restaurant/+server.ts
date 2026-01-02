@@ -6,13 +6,13 @@ import { NewRestaurantZ, RestaurantZ } from '$lib/types';
 export const GET: RequestHandler = async ({ url }) => {
 	const params = url.searchParams;
 	const id = params.get('id');
-	if(id) {
+	if (id) {
 		const restaurant = await RestaurantDAO.getRestaurantById(id);
-		if(!restaurant) {
+		if (!restaurant) {
 			return json({ error: 'Restaurant not found' }, { status: 404 });
 		}
 		return json(restaurant);
-	}else {
+	} else {
 		const allRestaurants = await RestaurantDAO.getAllRestaurants();
 		return json(allRestaurants);
 	}
@@ -55,4 +55,4 @@ export const DELETE: RequestHandler = async ({ request }) => {
 	const { id } = parseResult.data;
 	await RestaurantDAO.deleteRestaurant(id);
 	return json({ success: true });
-}
+};

@@ -131,7 +131,11 @@
 	<Layer.Vector>
 		{#key restaurants}
 			{#each restaurants as restaurant}
-				{@const style = emojiToSvgDataUrl({ emoji: restaurant.icon, size: 40, name: restaurant.name })}
+				{@const style = emojiToSvgDataUrl({
+					emoji: restaurant.icon,
+					size: 40,
+					name: restaurant.name
+				})}
 				<Feature.Point coordinates={restaurant.coordinates} properties={restaurant} {style} />
 			{/each}
 		{/key}

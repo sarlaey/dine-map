@@ -1,4 +1,4 @@
-import type { Restaurant } from "./types";
+import type { Restaurant } from './types';
 
 class GlobalsClass {
 	searchOpen = $state(false);
@@ -6,7 +6,6 @@ class GlobalsClass {
 	toggleList = $state<Restaurant['id'] | null>(null);
 	manageLists = $state(false);
 }
-
 
 const Globals = new GlobalsClass();
 export default Globals;

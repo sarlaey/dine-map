@@ -32,9 +32,9 @@ services:
     restart: unless-stopped
     volumes:
       - ./tileset:/data:Z
-    command: ["-c", "/data/config.json"]
+    command: ['-c', '/data/config.json']
     ports:
-      - "${TILES_PORT}:8080"
+      - '${TILES_PORT}:8080'
 
 volumes:
   pg_data:

@@ -19,7 +19,11 @@
 	let createListContent = $state({ name: '', description: '' });
 	let isCreatingList = $state(false);
 	let editListId = $state<List['id'] | null>(null);
-	let editedList = $state<NewList>({ name: '', description: '', icon: availableEmojis[0] });
+	let editedList = $state<Required<NewList>>({
+		name: '',
+		description: '',
+		icon: availableEmojis[0]
+	});
 
 	async function createList() {
 		isCreatingList = true;
@@ -114,6 +118,16 @@
 			}
 		}
 	});
+
+	$effect(() => {
+		if (!restaurant && !Globals.manageLists) {
+			editListId = null;
+			editedList = { name: '', description: '', icon: availableEmojis[0] };
+			isCreatingList = false;
+			createListContent = { name: '', description: '' };
+			createListOpen = false;
+		}
+	});
 </script>
 
 {#snippet listIcon(icon: List['icon'], id: List['id'], isEditing: boolean)}
@@ -185,6 +199,7 @@
 									bind:value={editedList.description}
 									placeholder="Description"
 									class="resize-none"
+									autoFit={{ active: true, maxRows: 4 }}
 								/>
 							{:else}
 								<span class="text-lg font-medium">
@@ -230,6 +245,7 @@
 								bind:value={createListContent.description}
 								placeholder="Description"
 								class="resize-none"
+								autoFit={{ active: true, maxRows: 4 }}
 							/>
 						</div>
 						<Button

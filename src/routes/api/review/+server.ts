@@ -35,15 +35,15 @@ export const GET: RequestHandler = async ({ url }) => {
 };
 
 export const POST: RequestHandler = async ({ request }) => {
-  const body = await request.json();
-  const schema = NewReviewZ;
-  const parseResult = schema.safeParse(body);
-  if (!parseResult.success) {
-    return json({ errors: parseResult.error }, { status: 400 });
-  }
-  const newReview = parseResult.data;
-  const createdReview = await ReviewDAO.createReview(newReview);
-  return json(createdReview, { status: 201 });
+	const body = await request.json();
+	const schema = NewReviewZ;
+	const parseResult = schema.safeParse(body);
+	if (!parseResult.success) {
+		return json({ errors: parseResult.error }, { status: 400 });
+	}
+	const newReview = parseResult.data;
+	const createdReview = await ReviewDAO.createReview(newReview);
+	return json(createdReview, { status: 201 });
 };
 
 export const DELETE: RequestHandler = async () => {

@@ -198,17 +198,10 @@
 			</Button>
 		{/if}
 		<div class="mt-auto flex shrink-0 flex-row gap-2">
-			<Button
-				variant="destructive"
-				onclick={() => (deleteStates.confirmOpen = true)}
-			>
+			<Button variant="destructive" onclick={() => (deleteStates.confirmOpen = true)}>
 				<Trash2 class="size-4 shrink-0" />
 			</Button>
-			<Button
-				variant="outline"
-				class="grow"
-				onclick={() => (Globals.restaurantDetailsId = null)}
-			>
+			<Button variant="outline" class="grow" onclick={() => (Globals.restaurantDetailsId = null)}>
 				Close
 			</Button>
 		</div>
@@ -271,8 +264,10 @@
 		<p>Are you sure you want to delete this restaurant? This action cannot be undone.</p>
 
 		<div class="flex flex-row items-center justify-end gap-2">
-			<Button variant="outline" onclick={() => (deleteStates.confirmOpen = false)} disabled={deleteStates.processing}
-				>Cancel</Button
+			<Button
+				variant="outline"
+				onclick={() => (deleteStates.confirmOpen = false)}
+				disabled={deleteStates.processing}>Cancel</Button
 			>
 			<Button
 				variant="destructive"

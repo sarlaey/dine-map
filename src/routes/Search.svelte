@@ -27,11 +27,7 @@
 		onResultSelect?: (result: SearchResult, associatedPlace?: Restaurant) => void;
 	}
 
-	let {
-		open = $bindable(),
-		viewBox = $bindable(),
-		onResultSelect
-	}: Props = $props();
+	let { open = $bindable(), viewBox = $bindable(), onResultSelect }: Props = $props();
 	let searchInput = $state<HTMLInputElement | null>(null);
 	let restaurants = $derived<Restaurant[]>(page.data.restaurants);
 	let searchResults = $state<SearchResult[]>([]);

@@ -12,6 +12,7 @@ interface ListTable {
 interface BelongsInListTable {
 	list_id: UUID;
 	restaurant_id: UUID;
+	added_at: string;
 }
 
 export class ListDAO {
@@ -27,9 +28,12 @@ export class ListDAO {
 	}
 
 	static async createList(list: NewList): Promise<List> {
+		const rows: (keyof NewList)[] = ['name', 'description'];
+		if (list.icon) {
+			rows.push('icon');
+		}
 		const [l] = await sql`
-      INSERT INTO list (name, description, icon)
-      VALUES (${list.name}, ${list.description}, ${list.icon})
+      INSERT INTO list ${sql(list, ...rows)}
       RETURNING *
     `;
 		return this.convertToList(l);
@@ -62,9 +66,14 @@ export class ListDAO {
 
 	static async getAllLists(): Promise<List[]> {
 		const listRows = await sql<ListTable[]>`
-			SELECT *
-			FROM list
-			ORDER BY created_at DESC
+			SELECT l.*
+			FROM list l
+			LEFT JOIN (
+				SELECT list_id, MAX(added_at) AS latest_item
+				FROM belongs_in_list
+				GROUP BY list_id
+			) i ON l.id = i.list_id
+			ORDER BY i.latest_item DESC NULLS LAST;
 		`;
 		const lists: (List | null)[] = [];
 		for (const listRow of listRows) lists.push(await this.getListById(listRow.id));
@@ -93,10 +102,7 @@ export class ListDAO {
 		`;
 	}
 
-	static async updateList(
-		id: List['id'],
-		updates: Partial<List>
-	): Promise<List | null> {
+	static async updateList(id: List['id'], updates: Partial<List>): Promise<List | null> {
 		const [updatedRow] = await sql<ListTable[]>`
 			UPDATE list
 			SET ${sql(updates, 'description', 'name', 'icon')}

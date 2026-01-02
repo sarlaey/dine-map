@@ -29,21 +29,25 @@
 
 <svelte:window onclick={onWindowClick} />
 
-<div class={cn('relative emoji-picker', className)} {...restProps}>
-  <button
-    onclick={() => {
-      open = !open;
-    }}
-  >
-	  {@render children?.()}
-  </button>
+<div class={cn('emoji-picker relative', className)} {...restProps}>
+	<button
+		onclick={() => {
+			open = !open;
+		}}
+	>
+		{@render children?.()}
+	</button>
 	{#if open}
-		<div class="h-[50dvh] max-h-50 w-[80dvw] max-w-50 overflow-y-auto rounded grid absolute z-10 bg-card top-full left-0 mt-2 border border-border p-2" transition:fade={{ duration: 300 }} style="grid-template-columns: repeat(auto-fit, minmax(2.25rem, 1fr));">
+		<div
+			class="absolute top-full left-0 z-10 mt-2 grid h-[50dvh] max-h-50 w-[80dvw] max-w-50 overflow-y-auto rounded border border-border bg-card p-2"
+			transition:fade={{ duration: 300 }}
+			style="grid-template-columns: repeat(auto-fit, minmax(2.25rem, 1fr));"
+		>
 			{#each availableEmojis as emoji}
 				<Button
 					onclick={() => {
 						onSelect?.(emoji);
-            open = false;
+						open = false;
 					}}
 					size="icon"
 					variant={emoji === selectedEmoji ? 'default' : 'ghost'}
