@@ -3,8 +3,8 @@
 First, clone the repo :
 
 ```bash
-git clone https://github.com/Angus-Paillaugue/
-cd
+git clone https://github.com/Angus-Paillaugue/dine-map
+cd dine-map
 ```
 
 Then, copy the `.env` file :
