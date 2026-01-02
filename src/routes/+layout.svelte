@@ -5,6 +5,7 @@
 	import { Bookmark, SearchIcon, X } from '@lucide/svelte';
 	import { cn } from '$lib/utils';
 	import { scale } from 'svelte/transition';
+	import Toaster from '$lib/components/Toast';
 
 	let { children } = $props();
 
@@ -20,6 +21,8 @@
 </svelte:head>
 
 <svelte:window onkeydown={onWindowKeydown} />
+
+<Toaster.Toaster />
 
 <div class="flex h-dvh w-dvw flex-col">
 	<div class="grow p-2">

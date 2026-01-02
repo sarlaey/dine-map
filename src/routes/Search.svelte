@@ -20,6 +20,7 @@
 	import { page } from '$app/state';
 	import { isSamePlace } from '$lib/utils';
 	import { fade, fly } from 'svelte/transition';
+	import Toaster from '$lib/components/Toast';
 
 	interface Props {
 		viewBox: Viewbox;
@@ -34,9 +35,9 @@
 	let abortController = $state<AbortController | null>(null);
 	let loading = $state(false);
 
-	// Search places within the current viewbox
+	// Search places within the current viewBox
 	async function search(query: string) {
-		if (!viewBox) return [];
+		if (!viewBox || query.length <= 2) return [];
 		const transformResult = (response: any[]): SearchResult[] => {
 			return response.map((result) => ({
 				place_id: result.place_id,
@@ -63,24 +64,23 @@
 			}
 			return transformResult(results);
 		} catch (error) {
-			console.error('Search error:', error);
+			const msg =
+				error instanceof Error ? error.message : 'An unknown error occurred during search';
+			Toaster.error(msg);
 			return [];
 		}
 	}
 
-	function onSearchInputKeydown(event: KeyboardEvent) {
-		if (event.key === 'Enter') {
-			event.preventDefault();
-			if (abortController) {
-				abortController.abort();
-			}
-			abortController = new AbortController();
-			loading = true;
-			search(searchInput?.value || '').then((results) => {
-				searchResults = results;
-				loading = false;
-			});
+	function onSearchInput() {
+		if (abortController) {
+			abortController.abort();
 		}
+		abortController = new AbortController();
+		loading = true;
+		search(searchInput?.value || '').then((results) => {
+			searchResults = results;
+			loading = false;
+		});
 	}
 
 	// Focus
@@ -107,7 +107,13 @@
 			<InputGroup.Input
 				placeholder="Search for restaurants"
 				bind:ref={searchInput}
-				onkeydown={onSearchInputKeydown}
+				debounceDelay={500}
+				onkeydown={(event) => {
+					if (event.key === 'Escape') {
+						open = false;
+					}
+				}}
+				onDebounced={onSearchInput}
 			/>
 			<InputGroup.Addon align="inline-end">
 				<InputGroup.Button size="icon-xs">

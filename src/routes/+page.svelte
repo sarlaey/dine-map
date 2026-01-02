@@ -22,6 +22,7 @@
 	import OlFeature from 'ol/Feature';
 	import Point from 'ol/geom/Point';
 	import { clusterStyle } from '$lib/utils';
+	import Toaster from '$lib/components/Toast';
 
 	let restaurants = $derived<RestaurantType[]>(page.data.restaurants);
 	let lists = $derived<List[]>(page.data.lists);
@@ -155,6 +156,7 @@
 						Globals.restaurantDetailsId = newRestaurant.id;
 					})
 					.catch((error) => {
+						Toaster.error('Error creating restaurant');
 						console.error('Error creating restaurant:', error);
 					});
 			}

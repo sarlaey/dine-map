@@ -12,6 +12,7 @@
 	import * as Empty from '$lib/components/ui/empty';
 	import { Bookmark, Pen, Plus, Save, Star, Trash2, UtensilsCrossed, X } from '@lucide/svelte';
 	import EmojiPicker from '$lib/components/emojiPicker/emojiPicker.svelte';
+	import Toaster from '$lib/components/Toast';
 
 	let restaurant = $derived(
 		(page.data.restaurants as Restaurant[]).find((r) => r.id === Globals.restaurantDetailsId) ||
@@ -48,8 +49,9 @@
 			},
 			body: JSON.stringify(newReview)
 		});
-		const data = await res.json();
 		if (!res.ok) {
+			Toaster.error('Failed to create review');
+			const data = await res.json();
 			console.error('Failed to create review:', data);
 			isCreatingReview = false;
 			return;
@@ -85,8 +87,9 @@
 			},
 			body: JSON.stringify(updatedRestaurant)
 		});
-		const data = await res.json();
 		if (!res.ok) {
+			Toaster.error('Failed to update restaurant');
+			const data = await res.json();
 			console.error('Failed to update restaurant:', data);
 			return;
 		}
@@ -103,8 +106,9 @@
 			},
 			body: JSON.stringify({ id: restaurant.id })
 		});
-		const data = await res.json();
 		if (!res.ok) {
+			Toaster.error('Failed to delete restaurant');
+			const data = await res.json();
 			console.error('Failed to delete restaurant:', data);
 			deleteStates.processing = false;
 			return;
@@ -150,8 +154,9 @@
 			},
 			body: JSON.stringify(updatedReview)
 		});
-		const data = await res.json();
 		if (!res.ok) {
+			Toaster.error('Failed to update review');
+			const data = await res.json();
 			console.error('Failed to update review:', data);
 			return;
 		}
@@ -168,6 +173,7 @@
 			body: JSON.stringify({ id: reviewId })
 		});
 		if (!res.ok) {
+			Toaster.error('Failed to delete review');
 			const data = await res.json();
 			console.error('Failed to delete review:', data);
 			return;

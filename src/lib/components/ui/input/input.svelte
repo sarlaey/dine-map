@@ -7,7 +7,10 @@
 	type Props = WithElementRef<
 		Omit<HTMLInputAttributes, 'type'> &
 			({ type: 'file'; files?: FileList } | { type?: InputType; files?: undefined })
-	>;
+	> & {
+		onDebounced?: (value: string) => void;
+		debounceDelay?: number;
+	};
 
 	let {
 		ref = $bindable(null),
@@ -15,9 +18,24 @@
 		type,
 		files = $bindable(),
 		class: className,
+		onDebounced,
+		debounceDelay = 300,
 		'data-slot': dataSlot = 'input',
 		...restProps
 	}: Props = $props();
+
+	function debounce(func: (v: string) => void, delay: number) {
+		let timeoutId: ReturnType<typeof setTimeout>;
+
+		return function (v: string) {
+			clearTimeout(timeoutId);
+			timeoutId = setTimeout(() => func(v), delay);
+		};
+	}
+
+	const update = $derived(debounce((v: string) => onDebounced?.(v), debounceDelay));
+
+	$effect(() => update(value));
 </script>
 
 {#if type === 'file'}

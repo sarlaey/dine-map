@@ -10,6 +10,7 @@
 	import { invalidateAll } from '$app/navigation';
 	import { cn } from '$lib/utils';
 	import EmojiPicker from '$lib/components/emojiPicker/emojiPicker.svelte';
+	import Toaster from '$lib/components/Toast';
 
 	let restaurant = $derived(
 		(page.data.restaurants as Restaurant[]).find((r) => r.id === Globals.toggleList) || null
@@ -43,7 +44,9 @@
 			body: JSON.stringify(createListContent)
 		});
 		if (!res.ok) {
-			console.error('Failed to create list');
+			Toaster.error('Failed to create list');
+			const data = await res.json();
+			console.error('Failed to create list', data);
 			isCreatingList = false;
 			return;
 		}
@@ -61,7 +64,9 @@
 			body: JSON.stringify({ listId, restaurantId })
 		});
 		if (!res.ok) {
-			console.error('Failed to add restaurant to list');
+			const data = await res.json();
+			Toaster.error('Failed to add restaurant to list');
+			console.error('Failed to add restaurant to list', data);
 			return;
 		}
 		await invalidateAll();
@@ -77,7 +82,9 @@
 			body: JSON.stringify({ listId, restaurantId })
 		});
 		if (!res.ok) {
-			console.error('Failed to remove restaurant from list');
+			Toaster.error('Failed to remove restaurant from list');
+			const data = await res.json();
+			console.error('Failed to remove restaurant from list', data);
 			return;
 		}
 		await invalidateAll();
@@ -109,7 +116,9 @@
 			body: JSON.stringify({ ...editedList, id: editListId })
 		});
 		if (!res.ok) {
-			console.error('Failed to save list');
+			Toaster.error('Failed to save list');
+			const data = await res.json();
+			console.error('Failed to save list', data);
 			return;
 		}
 		editListId = null;
@@ -126,7 +135,9 @@
 			body: JSON.stringify({ id: editListId })
 		});
 		if (!res.ok) {
-			console.error('Failed to delete list');
+			Toaster.error('Failed to delete list');
+			const data = await res.json();
+			console.error('Failed to delete list', data);
 			return;
 		}
 		editListId = null;
