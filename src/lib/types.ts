@@ -58,3 +58,8 @@ export const NewListZ = ListZ.omit({ id: true, createdAt: true, restaurants: tru
 	icon: ListZ.shape.icon.optional()
 });
 export type NewList = z.infer<typeof NewListZ>;
+
+export const MapCtxKey = 'mapCtx';
+export interface MapCtx {
+	resetMapView: () => void;
+}
